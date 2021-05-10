@@ -16,14 +16,30 @@ public class BatteryObserver : MonoBehaviour
     Text DisplayText = null;
 
 #if UNITY_IOS && !UNITY_EDITOR
+    /// <summary>
+    /// バッテリー残量取得
+    /// </summary>
+    /// <returns>バッテリー残量</returns>
     [DllImport("__Internal")]
-    private static extern int TestInt();
+    private static extern float GetBatteryLevel();
+
+    /// <summary>
+    /// 充電中？
+    /// </summary>
+    /// <returns>充電中ならtrue</returns>
+    [DllImport("__Internal")]
+    private static extern bool IsBatteryCharging();
 #endif
 
-    void Start()
+    void Update()
     {
 #if UNITY_IOS && !UNITY_EDITOR
-        DisplayText.text = string.Format("Test:{0}", TestInt());
+        string DispText = string.Format("BatteryLevel:{0}", GetBatteryLevel());
+        if (IsBatteryCharging())
+        {
+            DispText += "(充電中)";
+        }
+        DisplayText.text = DispText;
 #endif
     }
 }
